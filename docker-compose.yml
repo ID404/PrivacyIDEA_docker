@@ -1,0 +1,37 @@
+version: '2.1'
+
+services:
+  postgresql:
+    image: 'docker.io/bitnami/postgresql:14'
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRESQL_DATABASE=privacyidea
+      - POSTGRESQL_USERNAME=privacyidea
+      - POSTGRESQL_PASSWORD=privacyidea
+    volumes:
+      - ./privacyidea-db:/var/lib/postgresql/data
+  privacyidea:
+    image: 'docker.io/khalibre/privacyidea:v3.9.1-d1.4.1'
+    ports:
+      - '8081:8080'
+    environment:
+      - PI_DB_VENDOR=postgresql
+      - PI_DB_NAME=privacyidea
+      - PI_DB_HOST=postgresql
+      - PI_DB_USER=privacyidea
+      - PI_DB_PASSWORD=privacyidea
+      - PI_SECRET_KEY=suppersecretkey
+      - PI_PEPPER=secretworduseforadminencrypt
+      - PI_PAGE_TITLE=pivacyIDEA
+    depends_on:
+      - postgresql
+  freeradius:
+    # image: 'freeradius-pi-module:v1.0'
+    image: 'khalibre/freeradius-pi-module:latest'
+    ports:
+      - "1812-1813:1812-1813/udp"
+    volumes:
+      - './radius/etc/freeradius/rlm_perl.ini:/etc/freeradius/rlm_perl.ini:rw'
+      - './radius/log:/var/log/freeradius:rw'
+      - './radius/data/raddb:/data/raddb:rw'
