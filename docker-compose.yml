@@ -11,11 +11,13 @@ services:
       - POSTGRESQL_PASSWORD=privacyidea
     volumes:
       - ./privacyidea-db:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
   privacyidea:
     image: 'docker.io/khalibre/privacyidea:v3.9.1-d1.4.1'
     ports:
       - '8081:8080'
     environment:
+      - /etc/localtime:/etc/localtime:ro
       - PI_DB_VENDOR=postgresql
       - PI_DB_NAME=privacyidea
       - PI_DB_HOST=postgresql
@@ -32,6 +34,7 @@ services:
     ports:
       - "1812-1813:1812-1813/udp"
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - './radius/etc/freeradius/rlm_perl.ini:/etc/freeradius/rlm_perl.ini:rw'
       - './radius/log:/var/log/freeradius:rw'
       - './radius/data/raddb:/data/raddb:rw'
