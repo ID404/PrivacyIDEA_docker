@@ -10,14 +10,13 @@ services:
       - POSTGRESQL_USERNAME=privacyidea
       - POSTGRESQL_PASSWORD=privacyidea
     volumes:
-      - ./privacyidea-db:/var/lib/postgresql/data
+      - ./privacyidea-db:/bitnami/postgresql:rw
       - /etc/localtime:/etc/localtime:ro
   privacyidea:
     image: 'docker.io/khalibre/privacyidea:v3.9.1-d1.4.1'
     ports:
       - '8081:8080'
     environment:
-      - /etc/localtime:/etc/localtime:ro
       - PI_DB_VENDOR=postgresql
       - PI_DB_NAME=privacyidea
       - PI_DB_HOST=postgresql
@@ -26,6 +25,10 @@ services:
       - PI_SECRET_KEY=suppersecretkey
       - PI_PEPPER=secretworduseforadminencrypt
       - PI_PAGE_TITLE=pivacyIDEA
+      - PI_ADMIN_USER=user
+      - PI_ADMIN_PASSWORD=123456.com
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       - postgresql
   freeradius:
